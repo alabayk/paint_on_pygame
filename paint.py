@@ -6,7 +6,6 @@ screen = pygame.display.set_mode([width, height])
 running = True
 flag_ris = True
 nazhat = False
-coords = ()
 rad = 4
 
 while running:
@@ -15,10 +14,9 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             nazhat = True
-            coords = event.pos
         if event.type == pygame.MOUSEBUTTONUP:
             nazhat = False
 
     if flag_ris and nazhat:
-        pygame.draw.circle(screen, pygame.Color('RED'), coords, rad)
+        pygame.draw.circle(screen, pygame.Color('RED'), pygame.mouse.get_pos(), rad)
         pygame.display.update()
