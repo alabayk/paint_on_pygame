@@ -11,19 +11,28 @@ nazhat = False
 rad = 4
 filename = ''
 zvet = pygame.Color('RED')
+start = True
 
-while running:
+def baza():
+    screen.fill(pygame.Color('black'))
+    if flag_ris:
+        pygame.draw.rect(screen, pygame.Color('Blue'), [0, 0, 30, 30], )
+    elif flag_lastika:
+        pygame.draw.rect(screen, pygame.Color('Green'), [0, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('white'), [750, 550, 50, 50], )
+    pygame.draw.rect(screen, pygame.Color('gray'), [590, 0, 200, 40], )
     pygame.draw.rect(screen, pygame.Color('red'), [600, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('orange'), [630, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('yellow'), [660, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('green'), [690, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('blue'), [720, 0, 30, 30], )
     pygame.draw.rect(screen, pygame.Color('purple'), [750, 0, 30, 30], )
-    if flag_ris:
-        pygame.draw.rect(screen, pygame.Color('Blue'), [0, 0, 30, 30], )
-    elif flag_lastika:
-        pygame.draw.rect(screen, pygame.Color('Green'), [0, 0, 30, 30], )
+    pygame.draw.rect(screen, pygame.Color('brown'), [0, 30, 30, 30], )
+while running:
+    if start:
+        baza()
+        start = False
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -59,8 +68,13 @@ while running:
             pygame.display.update()
         if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779 and event.pos[1] <= 30:
             zvet = pygame.Color('purple')
+            pygame.display.flip()
             pygame.display.update()
 
+        if event.type == pygame.MOUSEBUTTONDOWN and event.pos[0] <= 30 and 30 <= event.pos[1] <= 59:
+            baza()
+            pygame.display.flip()
+            start = True
         if event.type == pygame.MOUSEBUTTONUP:
             nazhat = False
 
