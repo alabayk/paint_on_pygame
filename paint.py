@@ -142,7 +142,18 @@ def paint():
                 zvet = zvet_lastika
                 prev = True
                 filename = askopenfilename()
-                print(filename)
+                if filename != '':
+                    screen.fill(zvet_lastika)
+                    foto = pygame.image.load(filename)
+                    pygame.display.update()
+                    razmer = foto.get_rect().size
+                    for i in range(1, 100):
+                        if razmer[0] / i <= 800 and razmer[1] / i <= 550:
+                            foto = pygame.transform.scale(foto, (int(razmer[0] / i), int(razmer[1] / i)))
+                            razmer = foto.get_rect().size
+                            break
+                    position = ((width + 1) // 2 - (razmer[0] + 1) // 2, (height + 1) // 2 - (razmer[1] + 1) // 2 + 25)
+                    screen.blit(foto, position)
 
             # Выбор цвета в палитре
             if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569 \
