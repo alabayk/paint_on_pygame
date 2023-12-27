@@ -1,4 +1,5 @@
 import pygame
+import os
 from tkinter.filedialog import askopenfilename
 
 
@@ -43,7 +44,7 @@ def paint():
     def baza():
         f1 = pygame.font.Font(None, 24)
         if flag:
-            back = pygame.image.load('./Безымянный.png')
+            back = pygame.image.load('./Безымянный_проект.png')
             screen.blit(back, (0, 0))
         if not fon:
             text1 = f1.render('Выберите цвет кисти:', True, (180, 0, 0))
@@ -124,13 +125,15 @@ def paint():
         if nach:
             baza()
         if flag:
-            bg = pygame.image.load('./Безымянный.png')
+            bg = pygame.image.load('./Безымянный_проект.png')
             screen.blit(bg, (0, 0))
 
         for event in pygame.event.get():
             # Выход из программы
             if event.type == pygame.QUIT:
-                start()
+                # start()
+                # file_save()
+                ask()
                 running = False
 
             # Проверка на нажатие
@@ -353,29 +356,25 @@ def paint():
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
-                pygame.image.save(screen, 'Безымянный.png')
+                pygame.image.save(screen, 'Безымянный_проект.png')
                 if flag_pryam:
                     if event.pos[1] >= 50:
                         if coords[0] <= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
                             a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
                             x, y = coords
                             history.append(((x, y), (a, b)))
-                            # print(history)
                         elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
                             a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
                             x, y = pygame.mouse.get_pos()
                             history.append(((x, y), (a, b)))
-                            # print(history)
                         elif coords[0] <= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
                             a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
                             x, y = coords[0], coords[1] - b
                             history.append(((x, y), (a, b)))
-                            # print(history)
                         elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
                             a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
                             x, y = coords[0] - a, coords[1]
                             history.append(((x, y), (a, b)))
-                            # print(history)
 
 
         # Рисование кистью
@@ -401,7 +400,7 @@ def paint():
                 a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(coords[1] - pygame.mouse.get_pos()[1])
                 x, y = coords
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
-                bg = pygame.image.load('./Безымянный.png')
+                bg = pygame.image.load('./Безымянный_проект.png')
                 screen.blit(bg, (0, 0))
                 pygame.draw.rect(screen, zvet_pryam, [x, y,  a, b], 2)
                 pygame.display.update()
@@ -410,7 +409,7 @@ def paint():
                 a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(coords[1] - pygame.mouse.get_pos()[1])
                 x, y = pygame.mouse.get_pos()
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
-                bg = pygame.image.load('./Безымянный.png')
+                bg = pygame.image.load('./Безымянный_проект.png')
                 screen.blit(bg, (0, 0))
                 pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
                 pygame.display.update()
@@ -419,7 +418,7 @@ def paint():
                 a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(coords[1] - pygame.mouse.get_pos()[1])
                 x, y = coords[0], coords[1] - b
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
-                bg = pygame.image.load('./Безымянный.png')
+                bg = pygame.image.load('./Безымянный_проект.png')
                 screen.blit(bg, (0, 0))
                 pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
                 pygame.display.update()
@@ -428,7 +427,7 @@ def paint():
                 a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(coords[1] - pygame.mouse.get_pos()[1])
                 x, y = coords[0] - a, coords[1]
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
-                bg = pygame.image.load('./Безымянный.png')
+                bg = pygame.image.load('./Безымянный_проект.png')
                 screen.blit(bg, (0, 0))
                 pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
                 pygame.display.update()
@@ -469,5 +468,140 @@ def start():
                 running = False
 
 
+def file_save():
+    class TextInputBox(pygame.sprite.Sprite):
+        def __init__(self, x, y, w, font):
+            super().__init__()
+            self.color = (0, 0, 0)
+            self.backcolor = None
+            self.pos = (x, y)
+            self.width = w
+            self.font = font
+            self.active = False
+            self.text = ".png"
+            self.render_text()
+            self.a = []
+            self.flag = False
+            self.sp = [pygame.K_TAB, pygame.K_DELETE, pygame.K_SPACE, pygame.K_COMMA, pygame.K_INSERT]
+
+        def render_text(self):
+            t_surf = self.font.render(self.text, True, self.color, self.backcolor)
+            self.image = pygame.Surface((max(self.width, t_surf.get_width() + 10), t_surf.get_height() + 10),
+                                        pygame.SRCALPHA)
+            if self.backcolor:
+                self.image.fill(self.backcolor)
+            self.image.blit(t_surf, (5, 5))
+            pygame.draw.rect(self.image, self.color, self.image.get_rect().inflate(-2, -2), 2)
+            self.rect = self.image.get_rect(topleft=self.pos)
+
+        def update(self, event_list):
+            for event in event_list:
+                if event.type == pygame.MOUSEBUTTONDOWN and not self.active:
+                    self.active = self.rect.collidepoint(event.pos)
+                if event.type == pygame.KEYDOWN and self.active:
+                    if event.key == pygame.K_RETURN:
+                        if len(self.a) != 0:
+                            self.color = (255, 0, 0)
+                            self.flag = True
+                        else:
+                            pass
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.text = self.text[:-5] + '.png'
+                        self.a = self.a[:-1]
+                        self.flag = False
+                    elif event.key not in self.sp:
+                        self.a.append(event.unicode)
+                        self.text = ''.join(self.a) + '.png'
+                        self.flag = False
+                    self.render_text()
+                    self.render_text()
+
+        def show(self):
+            return self.text
+
+        def is_enter(self):
+            return self.flag
+
+
+    pygame.init()
+    screen = pygame.display.set_mode((800, 600))
+    clock = pygame.time.Clock()
+    font_1 = pygame.font.SysFont(None, 40)
+    font_2 = pygame.font.Font(None, 30)
+    baze = font_2.render('click here to add text', True, (0, 0, 0))
+    asking = font_2.render('Укажите желаемое название файла:', True, (0, 0, 0))
+    text_input_box = TextInputBox(200, 300, 400, font_1)
+    group = pygame.sprite.Group(text_input_box)
+    flag_1 = True
+    flag_2 = False
+    text = ''
+
+    run = True
+    while run:
+        clock.tick(60)
+        event_list = pygame.event.get()
+        for event in event_list:
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 20 <= event.pos[0] < 600 and 300 <= event.pos[1] < 337:
+                    flag_2 = True
+        group.update(event_list)
+
+        screen.fill(pygame.Color('white'))
+        screen.blit(asking, (200, 220))
+        if flag_1:
+            if flag_2:
+                group.draw(screen)
+            else:
+                pygame.draw.rect(screen, pygame.Color('black'), (201, 301, 398, 37), 2)
+                screen.blit(baze, (300, 310))
+
+        if text_input_box.is_enter():
+            flag_1 = False
+            text = text_input_box.show()
+            os.rename('Безымянный_проект.png', text)
+            run = False
+
+        pygame.display.flip()
+
+    pygame.quit()
+    exit()
+
+
+def ask():
+    pygame.init()
+    screen = pygame.display.set_mode((800, 600))
+    font_2 = pygame.font.Font(None, 30)
+    asking = font_2.render('Хотите ли Вы сохранить ваш рисунок?', True, (0, 0, 0))
+    yes = font_2.render('Да', True, (255, 255, 255))
+    no = font_2.render('Нет', True, (255, 255, 255))
+    running = True
+
+    while running:
+        event_list = pygame.event.get()
+        for event in event_list:
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 200 <= event.pos[0] < 300 and 270 <= event.pos[1] < 370:
+                    file_save()
+                    running = False
+                elif 500 <= event.pos[0] < 600 and 270 <= event.pos[1] < 370:
+                    os.remove("./Безымянный_проект.png")
+                    running = False
+
+        screen.fill(pygame.Color('white'))
+        screen.blit(asking, (210, 170))
+        pygame.draw.rect(screen, pygame.Color('green'), [200, 270, 100, 100])
+        screen.blit(yes, (235, 310))
+        # pygame.draw.line(screen, pygame.Color('blue'), (200, 270), (500, 270), 3)
+        pygame.draw.rect(screen, pygame.Color('red'), [500, 270, 100, 100])
+        screen.blit(no, (535, 310))
+        pygame.display.flip()
+
+
 start()
 # paint()
+# file_save()
+# ask()
