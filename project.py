@@ -10,10 +10,6 @@ def paint(nazad):
     height = 600
     screen = pygame.display.set_mode([width, height])
     screen.fill(pygame.Color('white'))
-    if nazad:
-        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png",
-                    f"{os.path.dirname(os.path.abspath(__file__))}\qwerty.png")
-        print('proshlo')
 
     running = True
     flag_ris = True
@@ -33,7 +29,6 @@ def paint(nazad):
     coords = ()
     history = []
     svezh = [[]]
-    nach = True
     flag = False
     i_global = 0
 
@@ -55,6 +50,7 @@ def paint(nazad):
             text1 = f1.render('Выберите цвет кисти:', True, (180, 0, 0))
         else:
             text1 = f1.render('Выберите цвет фона:', True, (180, 0, 0))
+        save = pygame.image.load('./data/save.png')
         brush = pygame.image.load('./data/paint-brush.png')
         eraser = pygame.image.load('./data/eraser.png')
         clear = pygame.image.load('./data/clear.png')
@@ -93,6 +89,7 @@ def paint(nazad):
         pygame.draw.rect(screen, pygame.Color('gray'), [80, 0, 10, 50], )
         pygame.draw.rect(screen, pygame.Color('gray'), [120, 0, 5, 50], )
         pygame.draw.rect(screen, pygame.Color('white'), [540, 10, 30, 30], )
+        screen.blit(save, (310, 10))
         if white:
             pygame.draw.rect(screen, pygame.Color('gray'), [540, 10, 30, 30], 4)
         pygame.draw.rect(screen, pygame.Color('black'), [570, 10, 30, 30], )
@@ -129,16 +126,9 @@ def paint(nazad):
         # Отрисовка интерфейса
         baza()
 
-        # if nazad:
-        #     bg = pygame.image.load('./new.png')
-        #     screen.blit(bg, (0, 0))
-        #     flag = False
-
         for event in pygame.event.get():
             # Выход из программы
             if event.type == pygame.QUIT:
-                # start()
-                # file_save()
                 ask()
                 running = False
 
@@ -151,6 +141,10 @@ def paint(nazad):
                     svezh.append([])
                     i_global += 1
 
+            # Сохранение
+            if event.type == pygame.MOUSEBUTTONDOWN and 310 <= event.pos[0] < 340 and 10 <= event.pos[1] < 40:
+                ask()
+                running = False
             # Смена режима ластик/кисть
             if event.type == pygame.MOUSEBUTTONDOWN and 10 <= event.pos[0] <= 39 and 10 <= event.pos[1] <= 39:
                 if flag_ris:
@@ -475,9 +469,13 @@ def start():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN and event.pos[0] < 400:
-                paint(False)
-                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.pos[0] < 400:
+                    paint(False)
+                    running = False
+                elif event.pos[0] >= 40:
+                    proga_mashi_i_stepana()
+                    running = False
 
 
 def file_save():
@@ -535,7 +533,7 @@ def file_save():
             return self.flag
 
         def is_text(self):
-            if len(self.text) > 4:
+            if len(self.text) > 4 and self.text != 'prom-file.png'and self.text != 'new.png':
                 return True
             else:
                 return False
@@ -574,7 +572,7 @@ def file_save():
                 if 200 <= event.pos[0] < 600 and 300 <= event.pos[1] < 337:
                     flag_2 = True
                 if flag_save:
-                    if 201 <= event.pos[0] < 600 and 380 <= event.pos[1] < 417:
+                    if 201 <= event.pos[0] < 600 and 380 <= event.pos[1] < 417 and text_input_box.is_text():
                         flag_1 = False
                         text = text_input_box.show()
                         if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\{text}'):
@@ -608,7 +606,7 @@ def file_save():
         if flag_error:
             screen.blit(error, (30, 50))
 
-        if text_input_box.is_enter():
+        if text_input_box.is_enter() and text_input_box.is_text():
             flag_1 = False
             text = text_input_box.show()
             if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\{text}'):
@@ -617,6 +615,7 @@ def file_save():
                 flag_1 = True
             else:
                 os.rename('prom-file.png', text)
+                final()
                 print()
                 print(f"file has been saved as {os.path.dirname(os.path.abspath(__file__))}\\{text}")
                 run = False
@@ -631,6 +630,7 @@ def ask():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     font_2 = pygame.font.Font(None, 30)
+    back = font_2.render('Вернуться к рисунку', True, (255, 255, 255))
     asking = font_2.render('Хотите ли Вы сохранить ваш рисунок?', True, (0, 0, 0))
     yes = font_2.render('Да', True, (255, 255, 255))
     no = font_2.render('Нет', True, (255, 255, 255))
@@ -642,6 +642,11 @@ def ask():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
+                                f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+                    paint(True)
+                    running = False
                 if 200 <= event.pos[0] < 300 and 270 <= event.pos[1] < 370:
                     file_save()
                     running = False
@@ -650,6 +655,8 @@ def ask():
                     running = False
 
         screen.fill(pygame.Color('white'))
+        pygame.draw.rect(screen, pygame.Color('gray'), (201, 450, 398, 37), )
+        screen.blit(back, (301, 460))
         screen.blit(asking, (210, 170))
         pygame.draw.rect(screen, pygame.Color('green'), [200, 270, 100, 100])
         screen.blit(yes, (235, 310))
@@ -658,10 +665,29 @@ def ask():
         screen.blit(no, (535, 310))
         pygame.display.flip()
 
+def final():
+    print('final')
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
+        print('yes - prom')
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\new.png'):
+        print('yes - new')
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+
+def proga_mashi_i_stepana():
+    pygame.init()
+    screen = pygame.display.set_mode((800, 600))
+    font_1 = pygame.font.Font(None, 36)
+    text = font_1.render('Скоро здесь будет что-то...', True, pygame.Color('red'))
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        screen.blit(text, (250, 250))
+        pygame.display.flip()
+
 
 start()
-# paint()
-# file_save()
-# ask()
-if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
-    os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+
