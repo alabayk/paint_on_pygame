@@ -31,6 +31,12 @@ def paint(nazad):
     svezh = [[]]
     flag = False
     i_global = 0
+    if nazad:
+        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png",
+                    f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+        back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+        screen.blit(back, (0, 0))
+        nazad = False
 
     white = True
     black = False
@@ -122,6 +128,7 @@ def paint(nazad):
             pygame.draw.rect(screen, pygame.Color('gray'), [90, 10, 30, 30], )
             screen.blit(papka, (90, 10))
             pygame.display.update()
+        pygame.display.flip()
     while running:
         # Отрисовка интерфейса
         baza()
@@ -143,7 +150,7 @@ def paint(nazad):
 
             # Сохранение
             if event.type == pygame.MOUSEBUTTONDOWN and 310 <= event.pos[0] < 340 and 10 <= event.pos[1] < 40:
-                ask()
+                file_save()
                 running = False
             # Смена режима ластик/кисть
             if event.type == pygame.MOUSEBUTTONDOWN and 10 <= event.pos[0] <= 39 and 10 <= event.pos[1] <= 39:
@@ -356,12 +363,6 @@ def paint(nazad):
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
-                if nazad:
-                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png",
-                                f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
-                    back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
-                    screen.blit(back, (0, 0))
-                    nazad = False
                 pygame.image.save(screen, 'prom-file.png')
                 if flag_pryam:
                     if event.pos[1] >= 50:
@@ -477,7 +478,6 @@ def start():
                     proga_mashi_i_stepana()
                     running = False
 
-
 def file_save():
     class TextInputBox(pygame.sprite.Sprite):
         def __init__(self, x, y, w, font):
@@ -562,6 +562,9 @@ def file_save():
         event_list = pygame.event.get()
         for event in event_list:
             if event.type == pygame.QUIT:
+                shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
+                            f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+                paint(True)
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
@@ -625,7 +628,6 @@ def file_save():
     pygame.quit()
     exit()
 
-
 def ask():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
@@ -640,6 +642,7 @@ def ask():
         event_list = pygame.event.get()
         for event in event_list:
             if event.type == pygame.QUIT:
+                paint(True)
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
@@ -651,7 +654,7 @@ def ask():
                     file_save()
                     running = False
                 elif 500 <= event.pos[0] < 600 and 270 <= event.pos[1] < 370:
-                    os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+                    final()
                     running = False
 
         screen.fill(pygame.Color('white'))
@@ -668,10 +671,10 @@ def ask():
 def final():
     print('final')
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
-        print('yes - prom')
+        print('deleted - prom')
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\new.png'):
-        print('yes - new')
+        print('deleted - new')
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
 
 def proga_mashi_i_stepana():
@@ -690,4 +693,3 @@ def proga_mashi_i_stepana():
 
 
 start()
-
