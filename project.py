@@ -5,7 +5,7 @@ from PIL import Image
 from tkinter.filedialog import askopenfilename
 
 
-def paint(nazad=False, sohr=False):
+def paint(nazad=False):
     pygame.init()
     width = 800
     height = 600
@@ -831,7 +831,6 @@ def paint(nazad=False, sohr=False):
                             x, y = coords[0] - a, coords[1]
                             history.append(((x, y), (a, b)))
 
-
         # Рисование кистью
         if flag_ris and nazhat:
             svezh[i_global].append(coords)
@@ -892,11 +891,14 @@ def paint(nazad=False, sohr=False):
             zvet = previous
             prev = False
 
+
 def obrezka(filename):
     with Image.open(filename) as img:
         img.load()
         cropped_img = img.crop((0, 50, 800, 600))
         cropped_img.save(filename)
+
+
 def start():
     pygame.init()
     width = 800
@@ -929,6 +931,7 @@ def start():
                 elif event.pos[0] >= 40:
                     proga_mashi_i_stepana()
                     running = False
+
 
 def file_save():
     class TextInputBox(pygame.sprite.Sprite):
@@ -985,7 +988,7 @@ def file_save():
             return self.flag
 
         def is_text(self):
-            if len(self.text) > 4 and self.text != 'prom-file.png'and self.text != 'new.png':
+            if len(self.text) > 4 and self.text != 'prom-file.png' and self.text != 'new.png':
                 return True
             else:
                 return False
@@ -1082,6 +1085,7 @@ def file_save():
     pygame.quit()
     exit()
 
+
 def ask():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
@@ -1122,11 +1126,13 @@ def ask():
         screen.blit(no, (535, 310))
         pygame.display.flip()
 
+
 def final():
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\new.png'):
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+
 
 def proga_mashi_i_stepana():
     pygame.init()
