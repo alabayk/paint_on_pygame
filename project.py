@@ -1,10 +1,11 @@
 import pygame
 import os
 import shutil
+from PIL import Image
 from tkinter.filedialog import askopenfilename
 
 
-def paint(nazad):
+def paint(nazad=False, sohr=False):
     pygame.init()
     width = 800
     height = 600
@@ -19,7 +20,7 @@ def paint(nazad):
     nazhat = False
     rad = 4
     zvet = pygame.Color('black')
-    zvet_pryam = pygame.Color('red')
+    zvet_pryam = pygame.Color('black')
     zvet_lastika = pygame.Color('white')
     previous = pygame.Color('white')
     fon = False
@@ -52,10 +53,13 @@ def paint(nazad):
         if flag:
             back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
             screen.blit(back, (0, 0))
-        if not fon:
-            text1 = f1.render('Выберите цвет кисти:', True, (180, 0, 0))
+        if flag_pryam:
+            text1 = f1.render('Выберите цвет фигуры:', True, (180, 0, 0))
         else:
-            text1 = f1.render('Выберите цвет фона:', True, (180, 0, 0))
+            if not fon:
+                text1 = f1.render('Выберите цвет кисти:', True, (180, 0, 0))
+            else:
+                text1 = f1.render('Выберите цвет фона:', True, (180, 0, 0))
         save = pygame.image.load('./data/save.png')
         brush = pygame.image.load('./data/paint-brush.png')
         eraser = pygame.image.load('./data/eraser.png')
@@ -63,20 +67,32 @@ def paint(nazad):
         zalivka = pygame.image.load('./data/zalivka.png')
         papka = pygame.image.load('./data/papka.png')
         kvadrat = pygame.image.load('./data/kvadrat.png')
+        pygame.draw.rect(screen, pygame.Color('gray'), [210, 10, 30, 30], )
+        screen.blit(eraser, (210, 10))
+        pygame.display.update()
         if flag_lastika:
-            pygame.draw.rect(screen, pygame.Color('gray'), [10, 10, 30, 30], )
-            screen.blit(eraser, (10, 10))
+            pygame.draw.rect(screen, pygame.Color(100, 100, 100), [205, 5, 40, 40], 5)
+        else:
+            pygame.draw.rect(screen, pygame.Color('gray'), [205, 5, 40, 40], 5)
+        if flag_ris:
+            pygame.draw.rect(screen, pygame.Color(100, 100, 100), [5, 5, 40, 40], 5)
+        else:
+            pygame.draw.rect(screen, pygame.Color('gray'), [5, 5, 40, 40], 5)
+        pygame.draw.rect(screen, pygame.Color('gray'), [10, 10, 30, 30], )
+        screen.blit(brush, (10, 10))
+        pygame.display.update()
+        if flag_pryam:
+            pygame.draw.rect(screen, pygame.Color(100, 100, 100), [165, 5, 40, 40], 5)
+            pygame.draw.rect(screen, pygame.Color('gray'), [170, 10, 30, 30], )
+            screen.blit(kvadrat, (170, 10))
             pygame.display.update()
-        elif flag_ris:
-            pygame.draw.rect(screen, pygame.Color('gray'), [10, 10, 30, 30], )
-            screen.blit(brush, (10, 10))
-            pygame.display.update()
-        elif flag_pryam:
-            pygame.draw.rect(screen, pygame.Color('gray'), [10, 10, 30, 30], )
-            screen.blit(kvadrat, (10, 10))
+        else:
+            pygame.draw.rect(screen, pygame.Color('gray'), [165, 5, 40, 40], 5)
+            pygame.draw.rect(screen, pygame.Color('gray'), [170, 10, 30, 30], )
+            screen.blit(kvadrat, (170, 10))
             pygame.display.update()
         if fon:
-            pygame.draw.rect(screen, pygame.Color('blue'), [125, 5, 40, 40], )
+            pygame.draw.rect(screen, pygame.Color(100, 100, 100), [125, 5, 40, 40], )
             pygame.draw.rect(screen, pygame.Color('gray'), [130, 10, 30, 30], )
             screen.blit(zalivka, (130, 10))
             pygame.display.update()
@@ -85,15 +101,11 @@ def paint(nazad):
             pygame.draw.rect(screen, pygame.Color('gray'), [130, 10, 30, 30], )
             screen.blit(zalivka, (130, 10))
             pygame.display.update()
-        pygame.draw.rect(screen, pygame.Color('gray'), [165, 0, 635, 50], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [0, 0, 125, 10], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [0, 0, 165, 5], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [0, 40, 125, 10], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [0, 45, 165, 5], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [0, 0, 10, 50], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [40, 0, 10, 50], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [80, 0, 10, 50], )
-        pygame.draw.rect(screen, pygame.Color('gray'), [120, 0, 5, 50], )
+        pygame.draw.rect(screen, pygame.Color('gray'), [310, 0, 635, 50], )
+        pygame.draw.rect(screen, pygame.Color('gray'), [85, 5, 40, 40], 5)
+        pygame.draw.rect(screen, pygame.Color('gray'), [45, 5, 40, 40], 5)
+        pygame.draw.rect(screen, pygame.Color('gray'), [0, 0, 250, 50], 5)
+        pygame.draw.rect(screen, pygame.Color('gray'), [250, 0, 60, 50], )
         pygame.draw.rect(screen, pygame.Color('white'), [540, 10, 30, 30], )
         screen.blit(save, (310, 10))
         if white:
@@ -152,31 +164,309 @@ def paint(nazad):
             if event.type == pygame.MOUSEBUTTONDOWN and 310 <= event.pos[0] < 340 and 10 <= event.pos[1] < 40:
                 file_save()
                 running = False
-            # Смена режима ластик/кисть
+            # Кисть
             if event.type == pygame.MOUSEBUTTONDOWN and 10 <= event.pos[0] <= 39 and 10 <= event.pos[1] <= 39:
-                if flag_ris:
-                    flag_ris = False
-                    flag_lastika = True
-                    flag_pryam = False
-                elif flag_lastika:
+                flag_ris = True
+                flag_lastika = False
+                flag_pryam = False
+                fon = False
+
+                pygame.draw.rect(screen, pygame.Color('gray'), [540, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [570, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [600, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [630, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [660, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [690, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [720, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [750, 10, 30, 30], 4)
+                pygame.display.flip()
+                white = True
+                black = True
+                red = True
+                orange = True
+                yellow = True
+                green = True
+                blue = True
+                purple = True
+                if zvet == pygame.Color('white'):
+                    white = False
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('black'):
+                    white = True
+                    black = False
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('red'):
+                    white = True
+                    black = True
+                    red = False
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('orange'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = False
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('yellow'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = False
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('green'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = False
+                    blue = True
+                    purple = True
+                elif zvet == pygame.Color('blue'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = False
+                    purple = True
+                elif zvet == pygame.Color('purple'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = False
+
+            # Прямая
+            if event.type == pygame.MOUSEBUTTONDOWN and 170 <= event.pos[0] < 200 and 10 <= event.pos[1] < 40:
+                if not flag_pryam:
                     flag_ris = False
                     flag_lastika = False
                     flag_pryam = True
-                elif flag_pryam:
-                    flag_pryam = False
-                    flag_ris = True
-                    flag_lastika = False
+                    fon = False
 
-            # Смена режима цвет кисти/цвет фона
+                    pygame.draw.rect(screen, pygame.Color('gray'), [540, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [570, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [600, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [630, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [660, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [690, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [720, 10, 30, 30], 4)
+                    pygame.draw.rect(screen, pygame.Color('gray'), [750, 10, 30, 30], 4)
+                    pygame.display.flip()
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    if zvet_pryam == pygame.Color('white'):
+                        white = False
+                        black = True
+                        red = True
+                        orange = True
+                        yellow = True
+                        green = True
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('black'):
+                        white = True
+                        black = False
+                        red = True
+                        orange = True
+                        yellow = True
+                        green = True
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('red'):
+                        white = True
+                        black = True
+                        red = False
+                        orange = True
+                        yellow = True
+                        green = True
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('orange'):
+                        white = True
+                        black = True
+                        red = True
+                        orange = False
+                        yellow = True
+                        green = True
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('yellow'):
+                        white = True
+                        black = True
+                        red = True
+                        orange = True
+                        yellow = False
+                        green = True
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('green'):
+                        white = True
+                        black = True
+                        red = True
+                        orange = True
+                        yellow = True
+                        green = False
+                        blue = True
+                        purple = True
+                    elif zvet_pryam == pygame.Color('blue'):
+                        white = True
+                        black = True
+                        red = True
+                        orange = True
+                        yellow = True
+                        green = True
+                        blue = False
+                        purple = True
+                    elif zvet_pryam == pygame.Color('purple'):
+                        white = True
+                        black = True
+                        red = True
+                        orange = True
+                        yellow = True
+                        green = True
+                        blue = True
+                        purple = False
+
+            # Ластик
+            if event.type == pygame.MOUSEBUTTONDOWN and 210 <= event.pos[0] < 240 and 10 <= event.pos[1] < 40:
+                flag_pryam = False
+                flag_ris = False
+                flag_lastika = True
+                fon = False
+
+            # Смена цвета фона
             if event.type == pygame.MOUSEBUTTONDOWN and 130 <= event.pos[0] <= 159 \
                     and 10 <= event.pos[1] <= 39 and not fon:
+                flag_ris = False
+                flag_lastika = False
+                flag_pryam = False
                 fon = True
-            elif event.type == pygame.MOUSEBUTTONDOWN and 130 <= event.pos[0] <= 159 \
-                    and 10 <= event.pos[1] <= 39 and fon:
-                fon = False
+                pygame.draw.rect(screen, pygame.Color('gray'), [540, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [570, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [600, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [630, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [660, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [690, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [720, 10, 30, 30], 4)
+                pygame.draw.rect(screen, pygame.Color('gray'), [750, 10, 30, 30], 4)
+                pygame.display.flip()
+                white = True
+                black = True
+                red = True
+                orange = True
+                yellow = True
+                green = True
+                blue = True
+                purple = True
+                if zvet_lastika == pygame.Color('white'):
+                    white = False
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('black'):
+                    white = True
+                    black = False
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('red'):
+                    white = True
+                    black = True
+                    red = False
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('orange'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = False
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('yellow'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = False
+                    green = True
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('green'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = False
+                    blue = True
+                    purple = True
+                elif zvet_lastika == pygame.Color('blue'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = False
+                    purple = True
+                elif zvet_lastika == pygame.Color('purple'):
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = False
 
             # Открытие файла
             if event.type == pygame.MOUSEBUTTONDOWN and 90 <= event.pos[0] <= 119 and 10 <= event.pos[1] <= 39:
+                pygame.draw.rect(screen, pygame.Color(100, 100, 100), [85, 5, 40, 40], 5)
+                pygame.display.flip()
                 previous = zvet
                 zvet = zvet_lastika
                 prev = True
@@ -195,171 +485,329 @@ def paint(nazad):
                     screen.blit(foto, position)
 
             # Выбор цвета в палитре
-            if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('white')
-                white = False
-                black = True
-                red = True
-                orange = True
-                yellow = True
-                green = True
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('black')
-                white = True
-                black = False
-                red = True
-                orange = True
-                yellow = True
-                green = True
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('red')
-                white = True
-                black = True
-                red = False
-                orange = True
-                yellow = True
-                green = True
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('orange')
-                white = True
-                black = True
-                red = True
-                orange = False
-                yellow = True
-                green = True
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('yellow')
-                white = True
-                black = True
-                red = True
-                orange = True
-                yellow = False
-                green = True
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('green')
-                white = True
-                black = True
-                red = True
-                orange = True
-                yellow = True
-                green = False
-                blue = True
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('blue')
-                white = True
-                black = True
-                red = True
-                orange = True
-                yellow = True
-                green = True
-                blue = False
-                purple = True
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779 \
-                    and 10 <= event.pos[1] <= 39 and not fon:
-                zvet = pygame.Color('purple')
-                white = True
-                black = True
-                red = True
-                orange = True
-                yellow = True
-                green = True
-                blue = True
-                purple = False
-                pygame.display.update()
+            if flag_ris:
+                if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('white')
+                    white = False
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('black')
+                    white = True
+                    black = False
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('red')
+                    white = True
+                    black = True
+                    red = False
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('orange')
+                    white = True
+                    black = True
+                    red = True
+                    orange = False
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('yellow')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = False
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('green')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = False
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('blue')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = False
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet = pygame.Color('purple')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = False
+                    pygame.display.update()
+
+            # Задний фон
+            elif fon:
+                if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('white'):
+                    screen.fill(pygame.Color('white'))
+                    white = False
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('white')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('black'):
+                    screen.fill(pygame.Color('black'))
+                    white = True
+                    black = False
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('black')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('red'):
+                    screen.fill(pygame.Color('red'))
+                    white = True
+                    black = True
+                    red = False
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('red')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('orange'):
+                    screen.fill(pygame.Color('orange'))
+                    white = True
+                    black = True
+                    red = True
+                    orange = False
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('orange')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('yellow'):
+                    screen.fill(pygame.Color('yellow'))
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = False
+                    green = True
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('yellow')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('green'):
+                    screen.fill(pygame.Color('green'))
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = False
+                    blue = True
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('green')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('blue'):
+                    screen.fill(pygame.Color('blue'))
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = False
+                    purple = True
+                    baza()
+                    zvet_lastika = pygame.Color('blue')
+                    pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779\
+                        and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('purple'):
+                    screen.fill(pygame.Color('purple'))
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = False
+                    baza()
+                    zvet_lastika = pygame.Color('purple')
+                    pygame.display.flip()
+
+            # Цвет фигуры
+            elif flag_pryam:
+                if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('white')
+                    white = False
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('black')
+                    white = True
+                    black = False
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('red')
+                    white = True
+                    black = True
+                    red = False
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('orange')
+                    white = True
+                    black = True
+                    red = True
+                    orange = False
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('yellow')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = False
+                    green = True
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('green')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = False
+                    blue = True
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('blue')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = False
+                    purple = True
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779 \
+                        and 10 <= event.pos[1] <= 39:
+                    zvet_pryam = pygame.Color('purple')
+                    white = True
+                    black = True
+                    red = True
+                    orange = True
+                    yellow = True
+                    green = True
+                    blue = True
+                    purple = False
+                    pygame.display.update()
 
             # Очистить экран
             if event.type == pygame.MOUSEBUTTONDOWN and 50 <= event.pos[0] <= 79 \
                     and 10 <= event.pos[1] <= 39:
                 screen.fill(zvet_lastika)
+                pygame.draw.rect(screen, pygame.Color(100, 100, 100), [45, 5, 40, 40], 5)
                 baza()
                 history = []
                 svezh = [[]]
                 i_global = 0
                 pygame.display.flip()
-
-            # Задний фон
-            if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('white'):
-                screen.fill(pygame.Color('white'))
-                baza()
-                zvet_lastika = pygame.Color('white')
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('black'):
-                screen.fill(pygame.Color('black'))
-                baza()
-                zvet_lastika = pygame.Color('black')
-                black = True
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('red'):
-                screen.fill(pygame.Color('red'))
-                baza()
-                zvet_lastika = pygame.Color('red')
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('orange'):
-                screen.fill(pygame.Color('orange'))
-                baza()
-                zvet_lastika = pygame.Color('orange')
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('yellow'):
-                screen.fill(pygame.Color('yellow'))
-                baza()
-                zvet_lastika = pygame.Color('yellow')
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('green'):
-                screen.fill(pygame.Color('green'))
-                baza()
-                zvet_lastika = pygame.Color('green')
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('blue'):
-                screen.fill(pygame.Color('blue'))
-                baza()
-                zvet_lastika = pygame.Color('blue')
-                fon = False
-                pygame.display.flip()
-            if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779\
-                    and 10 <= event.pos[1] <= 39 and fon and zvet_lastika != pygame.Color('purple'):
-                screen.fill(pygame.Color('purple'))
-                baza()
-                zvet_lastika = pygame.Color('purple')
-                fon = False
-                pygame.display.flip()
-
+                
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
@@ -409,7 +857,7 @@ def paint(nazad):
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
                 bg = pygame.image.load('./prom-file.png')
                 screen.blit(bg, (0, 0))
-                pygame.draw.rect(screen, zvet_pryam, [x, y,  a, b], 2)
+                pygame.draw.rect(screen, zvet_pryam, [x, y,  a, b], 6)
                 pygame.display.update()
             # 2 четверть
             elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
@@ -418,7 +866,7 @@ def paint(nazad):
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
                 bg = pygame.image.load('./prom-file.png')
                 screen.blit(bg, (0, 0))
-                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
+                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 6)
                 pygame.display.update()
             # 1 четверть
             elif coords[0] <= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
@@ -427,7 +875,7 @@ def paint(nazad):
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
                 bg = pygame.image.load('./prom-file.png')
                 screen.blit(bg, (0, 0))
-                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
+                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 6)
                 pygame.display.update()
             # 3 четверть
             elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
@@ -436,7 +884,7 @@ def paint(nazad):
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
                 bg = pygame.image.load('./prom-file.png')
                 screen.blit(bg, (0, 0))
-                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 2)
+                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 6)
                 pygame.display.update()
 
         # Отсутствие лишней прорисовки
@@ -444,7 +892,11 @@ def paint(nazad):
             zvet = previous
             prev = False
 
-
+def obrezka(filename):
+    with Image.open(filename) as img:
+        img.load()
+        cropped_img = img.crop((0, 50, 800, 600))
+        cropped_img.save(filename)
 def start():
     pygame.init()
     width = 800
@@ -564,13 +1016,13 @@ def file_save():
             if event.type == pygame.QUIT:
                 shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
                             f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
-                paint(True)
+                paint(nazad=True)
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
                     shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
                                 f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
-                    paint(True)
+                    paint(nazad=True)
                     run = False
                 if 200 <= event.pos[0] < 600 and 300 <= event.pos[1] < 337:
                     flag_2 = True
@@ -584,6 +1036,7 @@ def file_save():
                             flag_1 = True
                         else:
                             os.rename('prom-file.png', text)
+                            obrezka(text)
                             print()
                             print(f"file has been saved as {os.path.dirname(os.path.abspath(__file__))}\\{text}")
                             run = False
@@ -618,6 +1071,7 @@ def file_save():
                 flag_1 = True
             else:
                 os.rename('prom-file.png', text)
+                obrezka(text)
                 final()
                 print()
                 print(f"file has been saved as {os.path.dirname(os.path.abspath(__file__))}\\{text}")
@@ -642,13 +1096,13 @@ def ask():
         event_list = pygame.event.get()
         for event in event_list:
             if event.type == pygame.QUIT:
-                paint(True)
+                paint(nazad=True)
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
                     shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
                                 f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
-                    paint(True)
+                    paint(nazad=True)
                     running = False
                 if 200 <= event.pos[0] < 300 and 270 <= event.pos[1] < 370:
                     file_save()
@@ -669,12 +1123,9 @@ def ask():
         pygame.display.flip()
 
 def final():
-    print('final')
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
-        print('deleted - prom')
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\new.png'):
-        print('deleted - new')
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
 
 def proga_mashi_i_stepana():
