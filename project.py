@@ -10,6 +10,9 @@ def paint(nazad=False, sohr=False):
     width = 800
     height = 600
     screen = pygame.display.set_mode([width, height])
+    icon = pygame.image.load('./data/palitra.ico')
+    pygame.display.set_icon(icon)
+    pygame.display.set_caption('PAINT TOGETHER')
     screen.fill(pygame.Color('white'))
 
     running = True
@@ -909,6 +912,7 @@ def start():
     width = 800
     height = 600
     screen = pygame.display.set_mode([width, height])
+    pygame.display.set_caption('CHOOSE APP')
     screen.fill(pygame.Color('white'))
     pygame.display.flip()
     running = True
@@ -1001,6 +1005,7 @@ def file_save():
 
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption('WHAT NAME WILL YOU GIVE?')
     clock = pygame.time.Clock()
     font_1 = pygame.font.SysFont(None, 40)
     font_2 = pygame.font.Font(None, 30)
@@ -1095,6 +1100,7 @@ def file_save():
 def ask():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption('WANNA SAVE?')
     font_2 = pygame.font.Font(None, 30)
     back = font_2.render('Вернуться к рисунку', True, (255, 255, 255))
     asking = font_2.render('Хотите ли Вы сохранить ваш рисунок?', True, (0, 0, 0))
