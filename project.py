@@ -5,7 +5,7 @@ from PIL import Image
 from tkinter.filedialog import askopenfilename
 
 
-def paint(nazad=False):
+def paint(nazad=False, sohr=False):
     pygame.init()
     width = 800
     height = 600
@@ -33,9 +33,9 @@ def paint(nazad=False):
     flag = False
     i_global = 0
     if nazad:
-        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png",
-                    f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
-        back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/new.png",
+                    f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+        back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
         screen.blit(back, (0, 0))
         nazad = False
 
@@ -51,7 +51,7 @@ def paint(nazad=False):
     def baza():
         f1 = pygame.font.Font(None, 24)
         if flag:
-            back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
+            back = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
             screen.blit(back, (0, 0))
         if flag_pryam:
             text1 = f1.render('Выберите цвет фигуры:', True, (180, 0, 0))
@@ -141,6 +141,7 @@ def paint(nazad=False):
             screen.blit(papka, (90, 10))
             pygame.display.update()
         pygame.display.flip()
+
     while running:
         # Отрисовка интерфейса
         baza()
@@ -585,7 +586,7 @@ def paint(nazad=False):
 
             # Задний фон
             elif fon:
-                if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569\
+                if event.type == pygame.MOUSEBUTTONDOWN and 540 <= event.pos[0] <= 569 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('white'):
                     screen.fill(pygame.Color('white'))
                     white = False
@@ -599,7 +600,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('white')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599\
+                if event.type == pygame.MOUSEBUTTONDOWN and 570 <= event.pos[0] <= 599 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('black'):
                     screen.fill(pygame.Color('black'))
                     white = True
@@ -613,7 +614,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('black')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629\
+                if event.type == pygame.MOUSEBUTTONDOWN and 600 <= event.pos[0] <= 629 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('red'):
                     screen.fill(pygame.Color('red'))
                     white = True
@@ -627,7 +628,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('red')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659\
+                if event.type == pygame.MOUSEBUTTONDOWN and 630 <= event.pos[0] <= 659 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('orange'):
                     screen.fill(pygame.Color('orange'))
                     white = True
@@ -641,7 +642,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('orange')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689\
+                if event.type == pygame.MOUSEBUTTONDOWN and 660 <= event.pos[0] <= 689 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('yellow'):
                     screen.fill(pygame.Color('yellow'))
                     white = True
@@ -655,7 +656,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('yellow')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719\
+                if event.type == pygame.MOUSEBUTTONDOWN and 690 <= event.pos[0] <= 719 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('green'):
                     screen.fill(pygame.Color('green'))
                     white = True
@@ -669,7 +670,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('green')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749\
+                if event.type == pygame.MOUSEBUTTONDOWN and 720 <= event.pos[0] <= 749 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('blue'):
                     screen.fill(pygame.Color('blue'))
                     white = True
@@ -683,7 +684,7 @@ def paint(nazad=False):
                     baza()
                     zvet_lastika = pygame.Color('blue')
                     pygame.display.flip()
-                if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779\
+                if event.type == pygame.MOUSEBUTTONDOWN and 750 <= event.pos[0] <= 779 \
                         and 10 <= event.pos[1] <= 39 and zvet_lastika != pygame.Color('purple'):
                     screen.fill(pygame.Color('purple'))
                     white = True
@@ -807,7 +808,7 @@ def paint(nazad=False):
                 svezh = [[]]
                 i_global = 0
                 pygame.display.flip()
-                
+
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
@@ -815,19 +816,23 @@ def paint(nazad=False):
                 if flag_pryam:
                     if event.pos[1] >= 50:
                         if coords[0] <= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
+                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                coords[1] - pygame.mouse.get_pos()[1])
                             x, y = coords
                             history.append(((x, y), (a, b)))
                         elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
+                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                coords[1] - pygame.mouse.get_pos()[1])
                             x, y = pygame.mouse.get_pos()
                             history.append(((x, y), (a, b)))
                         elif coords[0] <= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
+                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                coords[1] - pygame.mouse.get_pos()[1])
                             x, y = coords[0], coords[1] - b
                             history.append(((x, y), (a, b)))
                         elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0]-pygame.mouse.get_pos()[0]), abs(coords[1]-pygame.mouse.get_pos()[1])
+                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                coords[1] - pygame.mouse.get_pos()[1])
                             x, y = coords[0] - a, coords[1]
                             history.append(((x, y), (a, b)))
 
@@ -856,7 +861,7 @@ def paint(nazad=False):
                 # pygame.draw.rect(screen, zvet_lastika, [0, 50, width, height])
                 bg = pygame.image.load('./prom-file.png')
                 screen.blit(bg, (0, 0))
-                pygame.draw.rect(screen, zvet_pryam, [x, y,  a, b], 6)
+                pygame.draw.rect(screen, zvet_pryam, [x, y, a, b], 6)
                 pygame.display.update()
             # 2 четверть
             elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
@@ -919,6 +924,7 @@ def start():
         screen.blit(text2, (450, 250))
 
         pygame.display.flip()
+
     while running:
         osnova()
         for event in pygame.event.get():
@@ -999,7 +1005,7 @@ def file_save():
     font_1 = pygame.font.SysFont(None, 40)
     font_2 = pygame.font.Font(None, 30)
     font_3 = pygame.font.Font(None, 45)
-    baze = font_2.render('click here to add text', True, (0, 0, 0))
+    baze = font_2.render('Добавить название', True, (0, 0, 0))
     asking = font_2.render('Укажите желаемое название файла:', True, (0, 0, 0))
     save = font_2.render('Сохранить', True, (255, 255, 255))
     back = font_2.render('Вернуться к рисунку', True, (255, 255, 255))
@@ -1017,14 +1023,14 @@ def file_save():
         event_list = pygame.event.get()
         for event in event_list:
             if event.type == pygame.QUIT:
-                shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
-                            f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+                shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                            f"{os.path.dirname(os.path.abspath(__file__))}/new.png")
                 paint(nazad=True)
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
-                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
-                                f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                f"{os.path.dirname(os.path.abspath(__file__))}/new.png")
                     paint(nazad=True)
                     run = False
                 if 200 <= event.pos[0] < 600 and 300 <= event.pos[1] < 337:
@@ -1047,7 +1053,7 @@ def file_save():
 
         screen.fill(pygame.Color('white'))
         screen.blit(asking, (200, 220))
-        pygame.draw.rect(screen, pygame.Color('gray'), (201, 450, 398, 37), )
+        pygame.draw.rect(screen, pygame.Color(100, 100, 100), (201, 450, 398, 37), )
         screen.blit(back, (301, 460))
         if text_input_box.is_text():
             pygame.draw.rect(screen, pygame.Color(100, 100, 100), (201, 380, 398, 37), )
@@ -1104,8 +1110,8 @@ def ask():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 200 <= event.pos[0] < 600 and 450 <= event.pos[1] < 487:
-                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png",
-                                f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                f"{os.path.dirname(os.path.abspath(__file__))}/new.png")
                     paint(nazad=True)
                     running = False
                 if 200 <= event.pos[0] < 300 and 270 <= event.pos[1] < 370:
@@ -1116,7 +1122,7 @@ def ask():
                     running = False
 
         screen.fill(pygame.Color('white'))
-        pygame.draw.rect(screen, pygame.Color('gray'), (201, 450, 398, 37), )
+        pygame.draw.rect(screen, pygame.Color(100, 100, 100), (201, 450, 398, 37), )
         screen.blit(back, (301, 460))
         screen.blit(asking, (210, 170))
         pygame.draw.rect(screen, pygame.Color('green'), [200, 270, 100, 100])
@@ -1128,10 +1134,10 @@ def ask():
 
 
 def final():
-    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png'):
-        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\prom-file.png")
-    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}\\new.png'):
-        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}\\new.png")
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}/prom-file.png'):
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}/new.png'):
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/new.png")
 
 
 def proga_mashi_i_stepana():
