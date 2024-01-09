@@ -21,6 +21,9 @@ def paint(nazad=False, sohr=False):
     flag_pryam = False
     flag = True
     nazhat = False
+    flag_back = False
+    ne_vernul = True
+    start = True
     rad = 4
     zvet = pygame.Color('black')
     zvet_pryam = pygame.Color('black')
@@ -143,6 +146,7 @@ def paint(nazad=False, sohr=False):
             pygame.draw.rect(screen, pygame.Color('gray'), [90, 10, 30, 30], )
             screen.blit(papka, (90, 10))
             pygame.display.update()
+        pygame.draw.rect(screen, pygame.Color('yellow'), [750, 550, 50, 50])
         pygame.display.flip()
 
     while running:
@@ -157,17 +161,48 @@ def paint(nazad=False, sohr=False):
 
             # Проверка на нажатие
             if event.type == pygame.MOUSEBUTTONDOWN and event.pos[1] >= 50:
-                nazhat = True
-                coords = event.pos
-                if flag_ris:
-                    svezh[0].append(zvet)
-                    svezh.append([])
-                    i_global += 1
+                if event.pos[0] < 750 and event.pos[1] < 550:
+                    nazhat = True
+                    coords = event.pos
+                    if flag_ris:
+                        svezh[0].append(zvet)
+                        svezh.append([])
+                        i_global += 1
+
+            # Назад
+            if event.type == pygame.MOUSEBUTTONDOWN and event.pos[1] >= 550 and event.pos[0] >= 750:
+                flag_back = True
+
+            if event.type == pygame.KEYDOWN:
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_LCTRL] and keys[pygame.K_z]:
+                    if ne_vernul:
+                        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                    f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png")
+
+                        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png",
+                                    f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                        prom = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                        screen.blit(prom, (0, 0))
+                        pygame.display.flip()
+                        ne_vernul = False
+                elif keys[pygame.K_LCTRL] and keys[pygame.K_y]:
+                    if not ne_vernul:
+                        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                    f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png")
+
+                        shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png",
+                                    f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                        prom = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                        screen.blit(prom, (0, 0))
+                        pygame.display.flip()
+                        ne_vernul = True
 
             # Сохранение
             if event.type == pygame.MOUSEBUTTONDOWN and 310 <= event.pos[0] < 340 and 10 <= event.pos[1] < 40:
                 file_save()
                 running = False
+
             # Кисть
             if event.type == pygame.MOUSEBUTTONDOWN and 10 <= event.pos[0] <= 39 and 10 <= event.pos[1] <= 39:
                 flag_ris = True
@@ -815,29 +850,46 @@ def paint(nazad=False, sohr=False):
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
+                if start:
+                    pygame.image.save(screen, 'prom-file.png')
+                    start = False
+                if not (event.pos[1] >= 550 and event.pos[0] >= 750) and not start:
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png")
                 pygame.image.save(screen, 'prom-file.png')
-                if flag_pryam:
-                    if event.pos[1] >= 50:
-                        if coords[0] <= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
-                                coords[1] - pygame.mouse.get_pos()[1])
-                            x, y = coords
-                            history.append(((x, y), (a, b)))
-                        elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
-                                coords[1] - pygame.mouse.get_pos()[1])
-                            x, y = pygame.mouse.get_pos()
-                            history.append(((x, y), (a, b)))
-                        elif coords[0] <= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
-                                coords[1] - pygame.mouse.get_pos()[1])
-                            x, y = coords[0], coords[1] - b
-                            history.append(((x, y), (a, b)))
-                        elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
-                            a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
-                                coords[1] - pygame.mouse.get_pos()[1])
-                            x, y = coords[0] - a, coords[1]
-                            history.append(((x, y), (a, b)))
+                if flag_back:
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
+                                f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png")
+
+                    shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png",
+                            f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                    prom = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                    screen.blit(prom, (0, 0))
+                    pygame.display.flip()
+                    flag_back = False
+                else:
+                    if flag_pryam:
+                        if event.pos[1] >= 50:
+                            if coords[0] <= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
+                                a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                    coords[1] - pygame.mouse.get_pos()[1])
+                                x, y = coords
+                                history.append(((x, y), (a, b)))
+                            elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
+                                a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                    coords[1] - pygame.mouse.get_pos()[1])
+                                x, y = pygame.mouse.get_pos()
+                                history.append(((x, y), (a, b)))
+                            elif coords[0] <= pygame.mouse.get_pos()[0] and coords[1] >= pygame.mouse.get_pos()[1]:
+                                a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                    coords[1] - pygame.mouse.get_pos()[1])
+                                x, y = coords[0], coords[1] - b
+                                history.append(((x, y), (a, b)))
+                            elif coords[0] >= pygame.mouse.get_pos()[0] and coords[1] <= pygame.mouse.get_pos()[1]:
+                                a, b = abs(coords[0] - pygame.mouse.get_pos()[0]), abs(
+                                    coords[1] - pygame.mouse.get_pos()[1])
+                                x, y = coords[0] - a, coords[1]
+                                history.append(((x, y), (a, b)))
 
         # Рисование кистью
         if flag_ris and nazhat:
@@ -905,6 +957,7 @@ def obrezka(filename):
         img.load()
         cropped_img = img.crop((0, 50, 800, 600))
         cropped_img.save(filename)
+        img.show(cropped_img)
 
 
 def start():
@@ -998,7 +1051,8 @@ def file_save():
             return self.flag
 
         def is_text(self):
-            if len(self.text) > 4 and self.text != 'prom-file.png' and self.text != 'new.png':
+            sp = ['prom-file.png', 'new.png', 'vpered.png', 'nazad.png']
+            if len(self.text) > 4 and self.text not in sp:
                 return True
             else:
                 return False
@@ -1144,6 +1198,10 @@ def final():
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
     if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}/new.png'):
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/new.png")
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}/nazad.png'):
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png")
+    if os.path.isfile(f'{os.path.dirname(os.path.abspath(__file__))}/vpered.png'):
+        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png")
 
 
 def proga_mashi_i_stepana():
