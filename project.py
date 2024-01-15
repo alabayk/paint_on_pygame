@@ -146,7 +146,7 @@ def paint(nazad=False, sohr=False):
             pygame.draw.rect(screen, pygame.Color('gray'), [90, 10, 30, 30], )
             screen.blit(papka, (90, 10))
             pygame.display.update()
-        pygame.draw.rect(screen, pygame.Color('yellow'), [750, 550, 50, 50])
+        # pygame.draw.rect(screen, pygame.Color('yellow'), [750, 550, 50, 50])
         pygame.display.flip()
 
     while running:
@@ -161,17 +161,13 @@ def paint(nazad=False, sohr=False):
 
             # Проверка на нажатие
             if event.type == pygame.MOUSEBUTTONDOWN and event.pos[1] >= 50:
-                if event.pos[0] < 750 and event.pos[1] < 550:
-                    nazhat = True
-                    coords = event.pos
-                    if flag_ris:
-                        svezh[0].append(zvet)
-                        svezh.append([])
-                        i_global += 1
+                nazhat = True
+                coords = event.pos
+                if flag_ris:
+                    svezh[0].append(zvet)
+                    svezh.append([])
+                    i_global += 1
 
-            # Назад
-            if event.type == pygame.MOUSEBUTTONDOWN and event.pos[1] >= 550 and event.pos[0] >= 750:
-                flag_back = True
 
             if event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
@@ -850,10 +846,11 @@ def paint(nazad=False, sohr=False):
             # Проверка на отжатие мыши
             if event.type == pygame.MOUSEBUTTONUP:
                 nazhat = False
+                ne_vernul = True
                 if start:
                     pygame.image.save(screen, 'prom-file.png')
                     start = False
-                if not (event.pos[1] >= 550 and event.pos[0] >= 750) and not start:
+                if not start:
                     shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png",
                                 f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png")
                 pygame.image.save(screen, 'prom-file.png')
@@ -862,11 +859,12 @@ def paint(nazad=False, sohr=False):
                                 f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png")
 
                     shutil.copy(f"{os.path.dirname(os.path.abspath(__file__))}/nazad.png",
-                            f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
+                                f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
                     prom = pygame.image.load(f"{os.path.dirname(os.path.abspath(__file__))}/prom-file.png")
                     screen.blit(prom, (0, 0))
                     pygame.display.flip()
                     flag_back = False
+                    ne_vernul = True
                 else:
                     if flag_pryam:
                         if event.pos[1] >= 50:
@@ -890,6 +888,7 @@ def paint(nazad=False, sohr=False):
                                     coords[1] - pygame.mouse.get_pos()[1])
                                 x, y = coords[0] - a, coords[1]
                                 history.append(((x, y), (a, b)))
+                                ne_vernul = True
 
         # Рисование кистью
         if flag_ris and nazhat:
@@ -957,43 +956,6 @@ def obrezka(filename):
         img.load()
         cropped_img = img.crop((0, 50, 800, 600))
         cropped_img.save(filename)
-        img.show(cropped_img)
-
-
-def start():
-    pygame.init()
-    width = 800
-    height = 600
-    screen = pygame.display.set_mode([width, height])
-    pygame.display.set_caption('CHOOSE APP')
-    screen.fill(pygame.Color('white'))
-    pygame.display.flip()
-    running = True
-
-    def osnova():
-        screen.fill(pygame.Color('white'))
-        pygame.draw.rect(screen, pygame.Color('purple'), [0, 0, 400, 600])
-        pygame.draw.rect(screen, pygame.Color('green'), [400, 0, 400, 600])
-        f1 = pygame.font.Font(None, 100)
-        text1 = f1.render('PAINT', True, (180, 0, 0))
-        screen.blit(text1, (100, 250))
-        text2 = f1.render('ДРУГОЕ', True, (180, 0, 0))
-        screen.blit(text2, (450, 250))
-
-        pygame.display.flip()
-
-    while running:
-        osnova()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.pos[0] < 400:
-                    paint(False)
-                    running = False
-                elif event.pos[0] >= 40:
-                    proga_mashi_i_stepana()
-                    running = False
 
 
 def file_save():
@@ -1107,6 +1069,7 @@ def file_save():
                             obrezka(text)
                             print()
                             print(f"file has been saved as {os.path.dirname(os.path.abspath(__file__))}\\{text}")
+                            final()
                             run = False
         group.update(event_list)
 
@@ -1204,19 +1167,5 @@ def final():
         os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/vpered.png")
 
 
-def proga_mashi_i_stepana():
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    font_1 = pygame.font.Font(None, 36)
-    text = font_1.render('Скоро здесь будет что-то...', True, pygame.Color('red'))
-    running = True
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.blit(text, (250, 250))
-        pygame.display.flip()
-
-
-start()
+paint()
